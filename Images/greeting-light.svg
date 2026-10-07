@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="766" height="60" viewBox="0 0 766 60" role="img" aria-label="C:\USERS\5ERGIOC&gt; hi, i'm Sergio" font-family="Consolas, &quot;DejaVu Sans Mono&quot;, Menlo, monospace" font-size="38px">
+<defs>
+<clipPath id="type">
+<rect x="396" y="0" width="0" height="60">
+<animate attributeName="width" values="0;23;46;68;91;114;137;160;182;205;228;251;274;296;319;342" dur="1.05s" calcMode="discrete" fill="freeze"/>
+</rect>
+</clipPath>
+</defs>
+<text x="8" y="41" textLength="388" lengthAdjust="spacingAndGlyphs" fill="#5f24be" xml:space="preserve">C:\USERS\5ERGIOC&gt;</text>
+<g clip-path="url(#type)">
+<text x="396" y="41" textLength="342" lengthAdjust="spacingAndGlyphs" fill="#18092f" xml:space="preserve"> hi, i'm Sergio</text>
+</g>
+<rect x="738" y="11" width="20" height="38" fill="#a62cc1" opacity="0">
+<animate attributeName="opacity" values="1;0" calcMode="discrete" begin="1.05s" dur="1.10s" repeatCount="indefinite"/>
+</rect>
+</svg>
