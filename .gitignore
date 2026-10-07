@@ -1,0 +1,12 @@
+.preview-*.html
+__pycache__/
+
+# The Sheikah glyphs are Nintendo's; generating the SVGs is enough.
+tools/sheikah.ttf
+
+# The source photo and its cutout. Only tools/portrait.txt and the rendered
+# SVGs get committed, so the original never lands in a public repo.
+tools/face*
+
+# tools/preview.py output: a few MB of inlined data URIs, rebuilt on demand.
+preview.html
