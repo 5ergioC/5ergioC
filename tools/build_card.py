@@ -196,7 +196,7 @@ def build(theme: dict, stats: dict) -> str:
         None,
         rule("- Contact", theme),
         field("Web", "5ergioc.github.io", theme),
-        field("LinkedIn", "in/sergio-castano-9b844b263", theme),
+        field("LinkedIn", "in/sergio-alejandro-castano-arcila", theme),
         None,
         rule("- Diagnostics", theme),
         pair(("Repos", f"{stats['repos']:,}"), ("Stars", f"{stats['stars']:,}"), theme),
