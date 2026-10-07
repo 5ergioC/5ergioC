@@ -1,0 +1,76 @@
+# Regenera los assets que dependen de datos vivos y los commitea en main:
+#   Images/whoami-{dark,light}.svg   conteos de la API de GitHub
+#   Images/snake{,-dark}.svg         serpiente del grafo de contribuciones
+#
+# La serpiente NO va a una rama "output" servida por raw.githubusercontent:
+# en un repo privado esa URL devuelve 404 a través del proxy camo y la imagen
+# sale rota. Commiteada aquí, el README la referencia con ruta relativa y
+# funciona igual en privado que en público, y no hay que reescribir URLs al
+# promover el README a 5ergioC/5ergioC.
+#
+# Un solo job y un solo commit al día: dos workflows separados hacían el
+# doble de corridas y ensuciaban el historial con dos commits.
+
+name: Build assets
+
+on:
+  schedule:
+    - cron: "17 5 * * *" # a diario
+  workflow_dispatch: # botón manual en la pestaña Actions
+  push:
+    branches: [main]
+    paths:
+      # palette.py belongs here: it sets the snake's colours, so a palette
+      # swap that skipped this filter left the snake on the old theme.
+      # Only what this job actually runs; portrait.txt is built locally.
+      - "tools/palette.py"
+      - "tools/build_card.py"
+      - ".github/workflows/assets.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Render la tarjeta WHOAMI
+        env:
+          # Sube el límite de la API de 60 a 5000 peticiones por hora.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python tools/build_card.py
+
+      # La paleta de la serpiente sale de tools/palette.py, igual que la
+      # del resto de la página: si estuviera escrita aquí sería un segundo
+      # sitio que acordarse de editar al cambiar de tema.
+      - name: Calcular la paleta de la serpiente
+        id: snake_palette
+        run: |
+          {
+            echo "outputs<<PALETTE_EOF"
+            python tools/palette.py --snake
+            echo "PALETTE_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Render la serpiente
+        uses: Platane/snk@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: ${{ steps.snake_palette.outputs.outputs }}
+
+      - name: Commitear si algo cambió
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Images/whoami-dark.svg Images/whoami-light.svg \
+                  Images/snake.svg Images/snake-dark.svg \
+                  tools/stats-cache.json
+          git diff --staged --quiet || git commit -m "chore: refresh generated assets"
+          git push
